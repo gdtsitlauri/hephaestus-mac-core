@@ -1,0 +1,4 @@
+assertion_name,status,coverage_%
+no_overflow,PASS,100.0
+reset_behavior,PASS,100.0
+enable_gating,PASS,100.0

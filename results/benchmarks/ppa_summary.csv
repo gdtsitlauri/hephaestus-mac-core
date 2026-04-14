@@ -1,0 +1,10 @@
+Metric,Baseline,Optimized,Improvement
+Total_Power_mW,2.24,1.95,13.1%
+Dynamic_Power_mW,2.22,1.93,13.2%
+Static_Power_mW,0.02,0.02,0%
+Die_Area_um2,40000.0,40000.0,0%
+Cell_Area_um2,92.0,116.0,-26.1%
+Utilization_%,0.23,0.29,-26.1%
+Max_Freq_MHz,212.77,212.77,0%
+Setup_Slack_ns,5.3,5.3,0%
+Clock_Period_ns,10.0,10.0,0%

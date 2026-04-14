@@ -1,0 +1,13 @@
+CYCLOPS-RTL Optimization Report
+================================
+Input file: mac_int8.sv
+Optimizations applied: ['clock_gating', 'operand_isolation']
+Estimated power reduction: 54.0%
+Estimated area overhead: 24.00 um^2
+Timing impact: 0.15 ns
+Recommendation: APPLY
+
+Suggested pipeline stages:
+  Stage 1: register multiplier output (weight * act)
+  Stage 2: accumulator add/register (acc_reg + product)
+Estimated post-pipeline stage delay target: ~2.4 ns per stage.

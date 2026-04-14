@@ -1,0 +1,2 @@
+array_size,batch,device,latency_seconds,tops,tops_per_watt
+8x8,256,cpu,0.00009830,0.00266672,1.360572
