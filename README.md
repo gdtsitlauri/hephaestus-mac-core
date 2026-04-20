@@ -1,35 +1,87 @@
-# HEPHAESTUS: Energy-Efficient AI Hardware Accelerator
+# HEPHAESTUS: Causal-Optimized INT8 Silicon Framework
 
-HEPHAESTUS is an end-to-end silicon design project featuring an 8-bit Integer Multiply-Accumulate (MAC) unit, optimized for Edge AI applications. The design was synthesized using the SkyWater 130nm CMOS process via the OpenLane flow.
+**Author:** George David Tsitlauri  
+**Affiliation:** Dept. of Informatics & Telecommunications, University of Thessaly, Greece  
+**Contact:** gdtsitlauri@gmail.com  
+**Year:** 2026
 
-## Key Features
-* Systolic Core: High-throughput 8-bit MAC architecture designed for neural network inference.
-* CYCLOPS-RTL Optimization: Integrated custom causal power-gating engine that intelligently manages switching activity.
-* Ultra-Low Power: Achieved a total power consumption of 1.96 mW at 100 MHz (a 13% improvement over baseline designs).
-* Silicon Ready: Passed all Sign-off checks, including DRC (Design Rule Check) and LVS (Layout Vs Schematic).
+HEPHAESTUS is an end-to-end hardware/HDL framework for a SkyWater-130nm-oriented INT8 MAC and systolic datapath. The physical layout is already generated at `results/gdsii/mac_int8.gds`, while benchmark reports are produced through lightweight estimation scripts (no local OpenLane/PDK install required).
 
-## Project Structure
-* openlane/mac_int8/: OpenLane configuration and flow scripts.
-* src/: SystemVerilog source code (optimized and baseline) and Python tools.
-* results/gdsii/: Final silicon layout (mac_int8.gds).
-* results/benchmarks/: Power and Area reports.
-* paper/: Technical documentation and LaTeX reports.
-* tb/cpp/: C++/Verilator testbench for RTL verification.
+## PPA Results (Baseline vs CYCLOPS-Optimized)
 
-## Performance Metrics (Sign-off)
-* Technology Node: SkyWater 130nm
-* Clock Frequency: 100 MHz
-* Internal Power: 0.927 mW
-* Switching Power: 1.040 mW
-* Total Dynamic Power: 1.96 mW
-* Status: DRC/LVS Clean
+| Metric | Baseline | Optimized | Improvement |
+|---|---:|---:|---:|
+| Total Power (mW) | 2.24 | 1.95 | 13.1% |
+| Dynamic Power (mW) | 2.22 | 1.93 | 13.2% |
+| Static Power (mW) | 0.02 | 0.02 | 0% |
+| Die Area (um^2) | 40000 | 40000 | 0% |
+| Cell Area (um^2) | 92.0 | 116.0 | -26.1% |
+| Utilization (%) | 0.23 | 0.29 | -26.1% |
+| Max Frequency (MHz) | 212.77 | 212.77 | 0% |
+| Setup Slack @100 MHz (ns) | 5.3 | 5.3 | 0% |
+
+## CYCLOPS-RTL Optimization Summary
+
+- `clock_gating`: detects/maintains gated clock network for sequential toggling reduction.
+- `operand_isolation`: guards multiplier when `weight == 0` or `act == 0` to reduce switching.
+- `pipeline_stage_analysis`: reports two-stage recommendation for timing closure:
+  - Stage 1: register multiplier output
+  - Stage 2: register accumulation
+- report output: `results/benchmarks/cyclops_optimization_report.txt`
+
+## AI Testbench (INT8 + GPU-aware)
+
+- `src/python/ai_testbench.py` compares float32, INT8 quantized, and RTL-behavioral outputs.
+- Produces:
+  - `results/benchmarks/ai_testbench_results.csv`
+  - `results/benchmarks/tops_estimation.csv`
+- Current generated metrics:
+  - SNR: 29.8941 dB (`>20 dB` target)
+  - TOPS: 2.6667e-03
+  - TOPS/Watt: 1.3606
+
+## Formal Verification
+
+- Assertions are defined in `src/rtl/mac_int8_assertions.sv`:
+  - no overflow in 20-bit signed range
+  - reset clears accumulator within one cycle
+  - `en=0` holds accumulator state
+- Behavioral checker: `src/python/verify_assertions.py`
+- Output: `results/benchmarks/formal_verification.csv` (all PASS, 100% coverage)
 
 ## How to Run
-1. Simulation: Use the provided Makefile to run the Verilator testbench:
-   make run_sim
 
-2. Synthesis: To reproduce the GDSII layout, run the automated synthesis script:
-   ./run_synthesis.sh
+1. Optimize RTL:
+   - `python3 src/python/cyclops_rtl.py`
+2. Generate PPA benchmarks:
+   - `python3 src/python/generate_benchmarks.py`
+3. Run AI testbench:
+   - `python3 src/python/ai_testbench.py`
+4. Run formal behavioral checks:
+   - `python3 src/python/verify_assertions.py`
+5. Execute regression tests:
+   - `pytest -q`
 
-## License
-This project is part of an academic research initiative into low-power AI hardware architectures.
+## Project Structure
+
+- `src/rtl/`: baseline and optimized SystemVerilog RTL
+- `src/python/`: optimizer, benchmark, AI, and formal scripts
+- `results/gdsii/`: generated physical layout (`mac_int8.gds`)
+- `results/benchmarks/`: all CSV/TXT benchmark outputs
+- `paper/`: conference-oriented LaTeX report
+
+## Note
+
+GDSII is already generated and available at `results/gdsii/mac_int8.gds`.
+
+## Citation
+
+```bibtex
+@misc{tsitlauri2026hephaestus,
+  author = {George David Tsitlauri},
+  title  = {HEPHAESTUS: A Causal-Optimized INT8 Silicon Framework for Edge AI},
+  year   = {2026},
+  institution = {University of Thessaly},
+  email  = {gdtsitlauri@gmail.com}
+}
+```
