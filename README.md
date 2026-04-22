@@ -1,11 +1,17 @@
 # HEPHAESTUS: Causal-Optimized INT8 Silicon Framework
 
-**Author:** George David Tsitlauri  
-**Affiliation:** Dept. of Informatics & Telecommunications, University of Thessaly, Greece  
-**Contact:** gdtsitlauri@gmail.com  
-**Year:** 2026
 
 HEPHAESTUS is an end-to-end hardware/HDL framework for a SkyWater-130nm-oriented INT8 MAC and systolic datapath. The physical layout is already generated at `results/gdsii/mac_int8.gds`, while benchmark reports are produced through lightweight estimation scripts (no local OpenLane/PDK install required).
+
+
+## Project Metadata
+
+| Field | Value |
+| --- | --- |
+| Author | George David Tsitlauri |
+| Affiliation | Dept. of Informatics & Telecommunications, University of Thessaly, Greece |
+| Contact | gdtsitlauri@gmail.com |
+| Year | 2026 |
 
 ## PPA Results (Baseline vs CYCLOPS-Optimized)
 
@@ -74,14 +80,18 @@ HEPHAESTUS is an end-to-end hardware/HDL framework for a SkyWater-130nm-oriented
 
 GDSII is already generated and available at `results/gdsii/mac_int8.gds`.
 
-## Citation
+## Why HEPHAESTUS Can Still Be Strong
 
-```bibtex
-@misc{tsitlauri2026hephaestus,
-  author = {George David Tsitlauri},
-  title  = {HEPHAESTUS: A Causal-Optimized INT8 Silicon Framework for Edge AI},
-  year   = {2026},
-  institution = {University of Thessaly},
-  email  = {gdtsitlauri@gmail.com}
-}
-```
+HEPHAESTUS already has a real RTL and silicon-oriented workflow:
+
+- RTL exists,
+- optimization passes exist,
+- GDSII output exists,
+- AI and formal-style checks exist.
+
+What is still missing is deeper downstream hardware closure through HLS/Vivado
+and broader validation, not the core research system itself. That makes the
+repo best presented as a serious silicon/RTL research platform with future
+physical-validation expansion.
+
+
